@@ -56,23 +56,30 @@ class SudokuBoard
 
 	def <<(board_string)
 		#for now, assumes each square is represented by a single char
+		board_string.delete!("\n ") #we allow whitespaces in the input to make input files easier to read and write manually
 		raise "wrong input size" unless board_string.length==$BoardSize**2
 		board_string.length.times do |i|
 			self[*(i.reminder_divison($BoardSize))]=(board_string[i..i] != "0")?(board_string[i..i].to_i):(nil)
 		end
+		self
 	end
 
 	def compress
 		rows.collect{|row| row.collect{|x| (x!=nil)?(x.to_s):("0")}}.flatten.join("")
 	end
+	def SudokuBoard::load(filename)
+		SudokuBoard.new << File.open(filename,"r"){|file| file.read}
+	end
 end
 
-temp=SudokuBoard.new
-temp[3,5]=5
-temp[2,2]=2
+temp=SudokuBoard.load("test.sud")
 puts temp.inspect
-puts temp.square(4).inspect
-puts temp.compress
-temp2=SudokuBoard.new
-temp2 << temp.compress
-puts temp2.inspect
+# temp=SudokuBoard.new
+# temp[3,5]=5
+# temp[2,2]=2
+# puts temp.inspect
+# puts temp.square(4).inspect
+# puts temp.compress
+# temp2=SudokuBoard.new
+# temp2 << temp.compress
+# puts temp2.inspect
